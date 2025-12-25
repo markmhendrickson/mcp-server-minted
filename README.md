@@ -185,10 +185,42 @@ The server returns structured error messages in JSON format when operations fail
 - API endpoint not found
 - Network timeouts
 
+## Security Notes
+
+- Credentials are never logged or exposed
+- Session cookies are stored in memory only
+- All network requests are to `minted.com` domains only
+- Use 1Password integration for secure credential management
+
+## Troubleshooting
+
+1. **Authentication Fails**
+   - Verify credentials are correct
+   - Check if Minted.com login page structure has changed
+   - Try running `scripts/export_minted_contacts.py` manually to test authentication
+
+2. **API Endpoints Not Found**
+   - Minted API structure may have changed
+   - Check browser Network tab when accessing Minted manually
+   - Update endpoints in `minted_mcp_server.py` if needed
+
+3. **Selenium Issues**
+   - Ensure Chrome/Chromium is installed
+   - `webdriver-manager` will download ChromeDriver automatically
+   - For headless issues, try removing `--headless` flag temporarily
+
 ## Notes
 
 - The server uses headless Chrome via Selenium for authentication
 - Session cookies are cached in memory for the duration of the server process
 - All date fields are returned as strings in ISO format
 - The server runs in stdio mode for MCP communication
+
+## License
+
+MIT
+
+## Support
+
+- [GitHub Issues](https://github.com/markmhendrickson/mcp-server-minted/issues)
 
