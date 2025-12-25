@@ -2,6 +2,10 @@
 
 MCP server for interacting with Minted.com API - address book, orders, and delivery information.
 
+## Credits
+
+This MCP server is based on the authentication pattern from [wkarney/minted-export](https://github.com/wkarney/minted-export), a utility to export addresses from minted.com. The original repository provided the Selenium-based authentication approach that this MCP server adapts for Model Context Protocol integration.
+
 ## Features
 
 - **Get Contacts**: Retrieve all contacts from Minted address book
@@ -19,7 +23,7 @@ pip install -r requirements.txt
 
 ### Credentials
 
-The server uses the same credential resolution as minted-export scripts:
+The server uses the same credential resolution as the original minted-export scripts:
 
 1. **1Password** (preferred): Configure credentials module to access "Minted.com" item
 2. **Environment Variables**: Set `minted_email` and `minted_password`
@@ -168,7 +172,7 @@ Get order history from Minted.
 
 ## Authentication
 
-The server uses Selenium to authenticate with Minted.com and then uses session cookies for API requests. This matches the authentication pattern used in the minted-export scripts.
+The server uses Selenium to authenticate with Minted.com and then uses session cookies for API requests. This matches the authentication pattern used in the original [minted-export](https://github.com/wkarney/minted-export) scripts.
 
 **Note:** Authentication happens on first API call and cookies are cached for subsequent calls in the same session.
 

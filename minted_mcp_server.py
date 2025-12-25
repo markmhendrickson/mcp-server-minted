@@ -3,7 +3,9 @@
 MCP Server for Minted.com API Interactions
 
 Provides tools for accessing Minted.com address book, orders, and delivery information.
-Uses the same authentication pattern as minted-export scripts.
+Uses the same authentication pattern as the original minted-export scripts.
+
+Based on: https://github.com/wkarney/minted-export
 """
 
 import json
