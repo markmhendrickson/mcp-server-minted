@@ -60,7 +60,7 @@ Then send MCP protocol messages via stdin (or use an MCP client).
 
 - Verify credentials are correct
 - Check if Minted.com login page structure has changed
-- Try running `minted-export/export_contacts.py` manually to test authentication
+- Try running `scripts/export_minted_contacts.py` manually to test authentication
 
 ### API Endpoints Not Found
 
@@ -86,5 +86,5 @@ Then send MCP protocol messages via stdin (or use an MCP client).
 - Credentials are never logged or exposed
 - Session cookies are stored in memory only
 - All network requests are to `minted.com` domains only
-- See `minted-export/SECURITY_ASSESSMENT.md` for security analysis
+- See `reference/minted-export-security-assessment.md` for security analysis
 
