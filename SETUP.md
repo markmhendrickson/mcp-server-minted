@@ -4,7 +4,7 @@
 
 1. **Install dependencies:**
    ```bash
-   cd mcp-servers/minted
+   cd execution/mcp-servers/minted
    pip install -r requirements.txt
    ```
 
@@ -33,7 +33,7 @@
        "minted": {
          "command": "python",
          "args": [
-           "$REPO_ROOT/mcp-servers/minted/minted_mcp_server.py"
+           "$REPO_ROOT/execution/mcp-servers/minted/minted_mcp_server.py"
          ],
          "env": {}
        }
@@ -48,7 +48,7 @@
 Test the server manually:
 
 ```bash
-cd mcp-servers/minted
+cd execution/mcp-servers/minted
 python minted_mcp_server.py
 ```
 

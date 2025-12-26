@@ -15,7 +15,7 @@ This MCP server is based on the authentication pattern from [wkarney/minted-expo
 ## Installation
 
 ```bash
-cd mcp-servers/minted
+cd execution/mcp-servers/minted
 pip install -r requirements.txt
 ```
 
@@ -23,42 +23,52 @@ pip install -r requirements.txt
 
 ### Credentials
 
-The server uses the same credential resolution as the original minted-export scripts:
+The server supports multiple authentication methods (checked in priority order):
 
-1. **1Password** (preferred): Configure credentials module to access "Minted.com" item
-2. **Environment Variables**: Set `minted_email` and `minted_password`
-3. **Interactive Prompt**: Will prompt if credentials not found
+1. **Environment Variables** (recommended, highest priority):
+   ```bash
+   export MINTED_EMAIL="your@email.com"
+   export MINTED_PASSWORD="yourpassword"
+   ```
+   Also supports lowercase: `minted_email` and `minted_password`
+
+2. **1Password Integration** (optional, for backward compatibility):
+   - Only available if parent repository structure exists
+   - Configure 1Password item with URL "minted.com"
+   - Add fields: "email" and "password"
+
+**Note:** The MCP server is self-contained and portable. It does not require any specific repository structure and can be used in any project.
 
 ### Cursor Configuration
 
-Add to your Cursor MCP settings:
+Add to your Cursor MCP settings (typically `~/.cursor/mcp.json` or Cursor settings):
 
+**Option 1: Using environment variables (recommended):**
 ```json
 {
   "mcpServers": {
     "minted": {
-      "command": "python",
+      "command": "python3",
       "args": [
-        "$REPO_ROOT/mcp-servers/minted/minted_mcp_server.py"
+        "/path/to/minted_mcp_server.py"
       ],
       "env": {
-        "minted_email": "your@email.com",
-        "minted_password": "yourpassword"
+        "MINTED_EMAIL": "your@email.com",
+        "MINTED_PASSWORD": "yourpassword"
       }
     }
   }
 }
 ```
 
-Or use 1Password integration (recommended):
-
+**Option 2: Using 1Password integration (if parent repo structure exists):**
 ```json
 {
   "mcpServers": {
     "minted": {
-      "command": "python",
+      "command": "python3",
       "args": [
-        "$REPO_ROOT/mcp-servers/minted/minted_mcp_server.py"
+        "/path/to/minted_mcp_server.py"
       ],
       "env": {}
     }
@@ -66,22 +76,30 @@ Or use 1Password integration (recommended):
 }
 ```
 
+**Note:** Replace `/path/to/minted_mcp_server.py` with the actual path to the server file.
+
 ### Claude Desktop Configuration
 
-Add to `claude_desktop_config.json`:
+Add to `claude_desktop_config.json` (typically `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
 ```json
 {
   "mcpServers": {
     "minted": {
-      "command": "python",
+      "command": "python3",
       "args": [
-        "$REPO_ROOT/mcp-servers/minted/minted_mcp_server.py"
-      ]
+        "/path/to/minted_mcp_server.py"
+      ],
+      "env": {
+        "MINTED_EMAIL": "your@email.com",
+        "MINTED_PASSWORD": "yourpassword"
+      }
     }
   }
 }
 ```
+
+**Note:** Replace `/path/to/minted_mcp_server.py` with the actual path to the server file.
 
 ## Available Tools
 

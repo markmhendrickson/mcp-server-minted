@@ -25,16 +25,30 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-# Project root directory
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-
-# Try to import credential utility
+# Optional: Try to import 1Password credential utility if available
+# This allows the MCP server to work standalone or with 1Password integration
+HAS_CREDENTIALS_MODULE = False
 try:
-    sys.path.insert(0, str(PROJECT_ROOT))
-    from scripts.credentials import get_credential_by_domain
-    HAS_CREDENTIALS_MODULE = True
-except ImportError:
-    HAS_CREDENTIALS_MODULE = False
+    # Try importing from common locations (for backward compatibility)
+    # First try parent repo structure (if running from this repo)
+    server_dir = Path(__file__).parent
+    possible_paths = [
+        server_dir.parent.parent.parent,  # execution/mcp-servers/minted -> execution -> personal
+        server_dir.parent.parent,  # mcp-servers/minted -> mcp-servers -> execution
+    ]
+    
+    for parent_path in possible_paths:
+        credentials_path = parent_path / "execution" / "scripts" / "credentials.py"
+        if credentials_path.exists():
+            sys.path.insert(0, str(parent_path))
+            try:
+                from execution.scripts.credentials import get_credential_by_domain
+                HAS_CREDENTIALS_MODULE = True
+                break
+            except ImportError:
+                continue
+except Exception:
+    pass
 
 # Initialize MCP server
 app = Server("minted")
@@ -44,8 +58,15 @@ _session_cache: Dict[str, Any] = {}
 
 
 def get_minted_credentials() -> Tuple[str, str]:
-    """Get Minted credentials from various sources."""
-    # Try 1Password first
+    """Get Minted credentials from various sources (priority: env vars > 1Password)."""
+    # First check environment variables (highest priority)
+    email = os.environ.get("MINTED_EMAIL") or os.environ.get("minted_email")
+    password = os.environ.get("MINTED_PASSWORD") or os.environ.get("minted_password")
+    
+    if email and password:
+        return email, password
+    
+    # Fall back to 1Password if available
     if HAS_CREDENTIALS_MODULE:
         try:
             email, password = get_credential_by_domain("minted.com")
@@ -53,15 +74,8 @@ def get_minted_credentials() -> Tuple[str, str]:
         except Exception:
             pass
     
-    # Fall back to environment variables
-    email = os.environ.get("minted_email")
-    password = os.environ.get("minted_password")
-    
-    if email and password:
-        return email, password
-    
     raise ValueError(
-        "Minted credentials not found. Set minted_email and minted_password "
+        "Minted credentials not found. Set MINTED_EMAIL and MINTED_PASSWORD "
         "environment variables or configure 1Password credentials."
     )
 
