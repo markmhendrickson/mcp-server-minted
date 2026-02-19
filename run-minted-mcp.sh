@@ -28,8 +28,10 @@ if [ -f "$REPO_ROOT/.env" ]; then
     set +a
 fi
 
-# Use venv Python if available, otherwise system Python
-if [ -f "$REPO_ROOT/execution/venv/bin/python3" ]; then
+# Prefer local .venv (has selenium etc.), then repo execution/venv, then system Python
+if [ -f "$SCRIPT_DIR/.venv/bin/python3" ]; then
+    exec "$SCRIPT_DIR/.venv/bin/python3" "$SCRIPT_DIR/minted_mcp_server.py"
+elif [ -f "$REPO_ROOT/execution/venv/bin/python3" ]; then
     exec "$REPO_ROOT/execution/venv/bin/python3" "$SCRIPT_DIR/minted_mcp_server.py"
 else
     exec python3 "$SCRIPT_DIR/minted_mcp_server.py"
